@@ -3,6 +3,8 @@ import { Fragment } from 'react'
 import { SIZE } from '../Constants'
 import PlayerStep from './PlayerStep'
 import { GameStore } from '../store/GameStore'
+import { PlaceWallState } from '../model/Game'
+import PlaceWall from './PlaceWall'
 
 const PLAYER_SIZE = 28
 const BORDER_ARR = new Array(BOARD_SIZE + 1).fill(0)
@@ -10,6 +12,8 @@ const BOARD_DIM = SIZE * BOARD_SIZE + 1
 
 function Board(props: {
   game: GameStore
+  wallState: PlaceWallState
+  resetWallState: () => void
 }) {
   return (
     <>
@@ -50,7 +54,7 @@ function Board(props: {
             backgroundColor: 'brown',
           }}></div>
         ))}
-        {props.game.players.map(player => (
+        {props.game.players.map((player, index) => (
           <div key={player.name} style={{
             position: 'absolute',
             top: player.pawn.position[0] * SIZE,
@@ -61,17 +65,30 @@ function Board(props: {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-            <div style={{
+            <span style={{
               width: PLAYER_SIZE,
               height: PLAYER_SIZE,
               borderRadius: PLAYER_SIZE / 2,
               backgroundColor: player.pawn.color,
-            }}></div>
+              textAlign: 'center',
+            }}>{`${index + 1}`}</span>
           </div>
         ))}
-        <PlayerStep game={props.game} onMove={(y, x) => {
-          props.game.movePawn([y, x])
-        }} />
+        {props.wallState ? (
+          <PlaceWall
+            wallState={props.wallState}
+            onPlace={at => {
+              if (props.wallState) {
+                props.game.placeWall({ position: at, angle: props.wallState })
+                props.resetWallState()
+              }
+            }}
+          />
+        ) : (
+          <PlayerStep game={props.game} onMove={(y, x) => {
+            props.game.movePawn([y, x])
+          }} />
+        )}
       </div>
     </>
   )

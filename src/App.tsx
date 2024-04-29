@@ -1,12 +1,14 @@
 import './App.css'
+import { useState } from 'react'
 import { useStore } from 'zustand'
 import gameStore from './store/GameStore'
-import { GameType } from './model/Game'
+import { GameType, PlaceWallState } from './model/Game'
 import Board from './components/Board'
 import InfoArea from './components/InfoArea'
 
 function App() {
   const gameStoreState = useStore(gameStore, state => state)
+  const [wallState, setWallState] = useState<PlaceWallState>()
 
   // useEffect(() => {
   //   gameStoreState.initGame(GameType.Two)
@@ -20,10 +22,19 @@ function App() {
 
   return (
     <>
-      <Board game={gameStoreState} />
-      <InfoArea game={gameStoreState} onStart={() => {
-        gameStoreState.initGame(GameType.Two)
-      }} />
+      <Board
+        game={gameStoreState}
+        wallState={wallState}
+        resetWallState={() => setWallState(undefined)}
+      />
+      <InfoArea
+        game={gameStoreState}
+        onStart={() => {
+          gameStoreState.initGame(GameType.Two)
+        }}
+        wallState={wallState}
+        onSetWallState={setWallState}
+      />
     </>
   )
 }

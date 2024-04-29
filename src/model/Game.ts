@@ -41,3 +41,5 @@ export interface Game {
 
 export type PawnStepLength = 0 | 1 | 2
 export type PawnSteps = Record<Direction, PawnStepLength>
+
+export type PlaceWallState = 'v' | 'h' | undefined

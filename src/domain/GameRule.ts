@@ -66,6 +66,7 @@ function getPlayingIndex(game: Game): number {
   return playingIndex
 }
 
+// TODO top-left, top-right, bottom-left, bottom-right
 export function calculatePawnSteps(game: Game): PawnSteps {
   const playingIndex = getPlayingIndex(game)
   const { position } = game.players[playingIndex].pawn
